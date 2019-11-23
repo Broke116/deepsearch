@@ -41,6 +41,16 @@ func uploadFile(w http.ResponseWriter, r *http.Request) {
 		logger.Println("can't read the temp file", err)
 	}
 
+	sqlStatement := `
+		INSERT INTO public.textual (title, content)
+		VALUES ($1, $2)
+	`
+	_, err = DBCon.Exec(sqlStatement, handler.Filename, fileByteFormat)
+
+	if err != nil {
+		logger.Println("database insertion error ", err)
+	}
+
 	tempFile.Write(fileByteFormat)
-	fmt.Fprintf(w, "Successfully uploaded the file")
+	fmt.Fprintf(w, string(fileByteFormat))
 }

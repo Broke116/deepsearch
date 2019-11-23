@@ -20,6 +20,10 @@ const (
 )
 
 var logger = log.New(os.Stdout, "http: ", log.LstdFlags)
+var (
+	// DBCon is a database connection name
+	DBCon *sql.DB
+)
 
 func createRoutes() {
 	fs := http.FileServer(http.Dir("static"))
@@ -32,17 +36,15 @@ func initDB() {
     	"password=%s dbname=%s sslmode=disable",
 		host, port, user, password, dbname)
 		
-	db, err := sql.Open("postgres", postgres)
+	DBCon, err := sql.Open("postgres", postgres)
 	if err != nil {
 		logger.Print("database connection error: ", err)
-		panic(err)
 	}
-	defer db.Close()
+	defer DBCon.Close()
 
-	err = db.Ping()
+	err = DBCon.Ping()
 	if err != nil {
 		logger.Print("database ping error: ", err)
-		panic(err)	
 	}
 
 	logger.Println("Database connection initialized")
