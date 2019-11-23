@@ -44,7 +44,7 @@ func uploadFile(w http.ResponseWriter, r *http.Request) {
 	sqlStatement := `
 		INSERT INTO public.textual (title, content)
 		VALUES ($1, $2)
-	`
+	`	
 	_, err = DBCon.Exec(sqlStatement, handler.Filename, fileByteFormat)
 
 	if err != nil {

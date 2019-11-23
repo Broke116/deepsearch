@@ -19,10 +19,12 @@ const (
 	dbname   = "deepsearch"
 )
 
-var logger = log.New(os.Stdout, "http: ", log.LstdFlags)
 var (
-	// DBCon is a database connection name
+    // DBCon is the connection handle
+    // for the database
 	DBCon *sql.DB
+	logger = log.New(os.Stdout, "http: ", log.LstdFlags)
+	err error
 )
 
 func createRoutes() {
@@ -36,11 +38,10 @@ func initDB() {
     	"password=%s dbname=%s sslmode=disable",
 		host, port, user, password, dbname)
 		
-	DBCon, err := sql.Open("postgres", postgres)
+	DBCon, err = sql.Open("postgres", postgres)
 	if err != nil {
 		logger.Print("database connection error: ", err)
-	}
-	defer DBCon.Close()
+	}	
 
 	err = DBCon.Ping()
 	if err != nil {
@@ -53,6 +54,8 @@ func initDB() {
 func main() {
 	initDB()
 	createRoutes()
+
+	defer DBCon.Close()
 
 	logger.Println("Listening on port", serverAddress)
 	logger.Fatal(http.ListenAndServe(serverAddress, nil))
