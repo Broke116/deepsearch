@@ -1,6 +1,7 @@
 package main
 
 import (
+	"html/template"
 	"database/sql"
 	"fmt"
 	"os"
@@ -25,13 +26,9 @@ var (
 	DBCon *sql.DB
 	logger = log.New(os.Stdout, "http: ", log.LstdFlags)
 	err error
+	// HomeTemplate stores the html file for home page
+	HomeTemplate *template.Template
 )
-
-func createRoutes() {
-	fs := http.FileServer(http.Dir("static"))
-	http.Handle("/", fs)
-	http.HandleFunc("/upload", uploadFile)
-}
 
 func initDB() {
 	postgres := fmt.Sprintf("host=%s port=%d user=%s "+
@@ -51,8 +48,18 @@ func initDB() {
 	logger.Println("Database connection initialized")
 }
 
+func prepareTemplate() {
+	HomeTemplate = template.Must(template.ParseFiles("static/index.html"))
+}
+
+func createRoutes() {
+	http.HandleFunc("/", homePage)
+	http.HandleFunc("/upload", uploadFile)
+}
+
 func main() {
 	initDB()
+	prepareTemplate()
 	createRoutes()
 
 	defer DBCon.Close()

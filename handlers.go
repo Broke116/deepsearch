@@ -6,6 +6,19 @@ import (
 	"net/http"
 )
 
+// HomePageData stores the data of the landing page
+type HomePageData struct {
+    PageTitle string
+}
+
+func homePage(w http.ResponseWriter, r *http.Request) {
+	data := HomePageData{
+		PageTitle: "Home",
+	}
+
+	HomeTemplate.Execute(w, data)
+}
+
 func uploadFile(w http.ResponseWriter, r *http.Request) {
 	logger.Print("Starting to upload the file")
 
