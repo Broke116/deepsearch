@@ -51,11 +51,14 @@ func initDB() {
 }
 
 func prepareTemplates() {
-	HomeTemplate = template.Must(template.ParseFiles("static/index.html"))
-	SearchTemplate = template.Must(template.ParseFiles("static/search.html"))
+	HomeTemplate = template.Must(template.ParseFiles("static/templates/index.html"))
+	SearchTemplate = template.Must(template.ParseFiles("static/templates/search.html"))
 }
 
 func createRoutes() {
+	fs := http.FileServer(http.Dir("static"))
+	http.Handle("/static/", http.StripPrefix("/static/", fs))
+
 	http.HandleFunc("/", homePage)
 	http.HandleFunc("/upload", uploadFile)
 	http.HandleFunc("/search", searchFile)

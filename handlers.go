@@ -14,7 +14,7 @@ type HomePageData struct {
 
 type result struct {
 	Title string
-	Ts_headline template.HTML
+	Tsheadline template.HTML
 }
 
 func homePage(w http.ResponseWriter, r *http.Request) {
@@ -28,6 +28,8 @@ func homePage(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+// uploadFile endpoint handles file upload operations, validations and error checks are handled before file upload
+// the name of the file refers to title column on db, the content of the file refers to content column on db
 func uploadFile(w http.ResponseWriter, r *http.Request) {
 	logger.Print("Starting to upload the file")
 
@@ -95,7 +97,7 @@ func searchFile(w http.ResponseWriter, r *http.Request) {
 
 	for rows.Next() {
 		var r result
-		if err := rows.Scan(&r.Title, &r.Ts_headline); err != nil {
+		if err := rows.Scan(&r.Title, &r.Tsheadline); err != nil {
 			logger.Println("Keyword not found")
 			http.Error(w, "keyword not found", http.StatusNotFound)
 			return
