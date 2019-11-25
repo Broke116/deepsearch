@@ -28,6 +28,8 @@ var (
 	err error
 	// HomeTemplate stores the html file for home page
 	HomeTemplate *template.Template
+	// SearchTemplate show the html structure of search page.
+	SearchTemplate *template.Template
 )
 
 func initDB() {
@@ -48,18 +50,20 @@ func initDB() {
 	logger.Println("Database connection initialized")
 }
 
-func prepareTemplate() {
+func prepareTemplates() {
 	HomeTemplate = template.Must(template.ParseFiles("static/index.html"))
+	SearchTemplate = template.Must(template.ParseFiles("static/search.html"))
 }
 
 func createRoutes() {
 	http.HandleFunc("/", homePage)
 	http.HandleFunc("/upload", uploadFile)
+	http.HandleFunc("/search", searchFile)
 }
 
 func main() {
 	initDB()
-	prepareTemplate()
+	prepareTemplates()
 	createRoutes()
 
 	defer DBCon.Close()
