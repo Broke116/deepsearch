@@ -7,25 +7,20 @@ import (
 	"net/http"
 )
 
-// HomePageData stores the data of the landing page
-type HomePageData struct {
-    PageTitle string
+// PageData stores the data of the landing page
+type PageData struct {
+	PageTitle string
+	Data []result
 }
 
 type result struct {
-	Title string
+	FileName string
 	Tsheadline template.HTML
+	PageTitle string
 }
 
 func homePage(w http.ResponseWriter, r *http.Request) {
-	data := HomePageData{
-		PageTitle: "Home",
-	}
-
-	err := HomeTemplate.Execute(w, data)
-	if err != nil {
-		logger.Print("HomeTemplate cant be loaded: ", err)
-	}
+	MainTemplate.ExecuteTemplate(w, "main", nil)
 }
 
 // uploadFile endpoint handles file upload operations, validations and error checks are handled before file upload
@@ -97,8 +92,8 @@ func searchFile(w http.ResponseWriter, r *http.Request) {
 
 	for rows.Next() {
 		var r result
-		if err := rows.Scan(&r.Title, &r.Tsheadline); err != nil {
-			logger.Println("Keyword not found")
+		if err := rows.Scan(&r.FileName, &r.Tsheadline); err != nil {
+			logger.Println("Keyword not found", err)
 			http.Error(w, "keyword not found", http.StatusNotFound)
 			return
 		}
@@ -106,19 +101,18 @@ func searchFile(w http.ResponseWriter, r *http.Request) {
 		results = append(results, r)
 
 		if err := rows.Err(); err != nil {
-			logger.Println("Keyword not found")
+			logger.Println("Keyword not found", err)
 			http.Error(w, "keyword not found", http.StatusNotFound)
 			return
 		}
 	}
 
+	pageData := PageData{ PageTitle: "Search Result", Data: results }
+
 	logger.Println("Keyword search is completed")
 
 	if len(results) > 0 {
-		err := SearchTemplate.Execute(w, results)
-		if err != nil {
-			logger.Print("SearchTemplate cant be loaded: ", err)
-		}
+		MainTemplate.ExecuteTemplate(w, "search", pageData)
 		return
 	}
 

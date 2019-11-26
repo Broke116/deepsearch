@@ -28,8 +28,8 @@ var (
 	err error
 	// HomeTemplate stores the html file for home page
 	HomeTemplate *template.Template
-	// SearchTemplate show the html structure of search page.
-	SearchTemplate *template.Template
+	// MainTemplate show the html structure of search page.
+	MainTemplate *template.Template
 )
 
 func initDB() {
@@ -51,8 +51,10 @@ func initDB() {
 }
 
 func prepareTemplates() {
-	HomeTemplate = template.Must(template.ParseFiles("static/templates/index.html"))
-	SearchTemplate = template.Must(template.ParseFiles("static/templates/search.html"))
+	MainTemplate, err = template.ParseGlob("static/templates/*.html")
+	if err != nil {
+		logger.Println("error while creating the template ", err)
+	}
 }
 
 func createRoutes() {
