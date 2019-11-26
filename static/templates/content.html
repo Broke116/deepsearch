@@ -1,15 +1,4 @@
 {{ define "content" }}
-  <!--<body>
-    <form
-      enctype="multipart/form-data"
-      action="http://localhost:8080/upload"
-      method="post">
-      <input type="file" name="inputFile" />
-      <input type="submit" value="upload" />
-    </form>
-
-    <br />
-  </body>-->
 <body>
     <div class="s130">
       <form
@@ -31,7 +20,16 @@
         <span class="info">ex. Game, Music, Video, Photography</span>
       </form>
     </div>
-    {{ template "search" }}
+    <br />
+    <div class="uploadForm">
+        <form
+          enctype="multipart/form-data"
+          action="http://localhost:8080/upload"
+          method="post">
+          <input type="file" name="inputFile" />
+          <button class="btn-search" type="submit">upload</button>
+        </form>
+    </div>
     <script src="/static/js/extention/choices.js"></script>
   </body>
 {{ end }}

@@ -816,7 +816,6 @@ button {
 }
 
 .s130 {
-  min-height: 100vh;
   display: -ms-flexbox;
   display: flex;
   -ms-flex-pack: center;
@@ -976,6 +975,11 @@ button {
   .s130 form .inner-form .input-field.second-wrap .btn-search {
     font-size: 13px;
   }
+}
+
+.uploadForm {
+  margin: 0 auto;
+  width: 700px;
 }
 
 /*# sourceMappingURL=Searchs_130.css.map */
